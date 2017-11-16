@@ -12,7 +12,7 @@ blkid
 +-----------------------------------------------------------------------------------+
 | >>> Atualize o arquivo "/etc/fstab file"  <<<                                     |
 +-----------------------------------------------------------------------------------+
-UUID={YOUR-UID}  /SEUDIRETORIO   {file-system-type  = ext3, ntfs}    defaults,errors=remount-ro 0       1
+UUID={YOUR-UID}  /SEUDIRETORIO   {file-system-type  = ext3, ntfs}    defaults, nofail, errors=remount-ro 0       1
 
 +-------------------------------------------------------------------------------------+
 | >>> Salve e feche o arquivo. Para montar a nova partição use o comando abaixo: <<<  |
