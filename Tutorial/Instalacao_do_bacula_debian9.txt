@@ -3,7 +3,7 @@
 # MySQL e PostgreSQL                                                                #
 # Autor: Wanderlei Hüttel															                                            #
 # Atualizado por: Luiz Felipe Neves                                                 #
-# Data atualização:  13/09/2017                                                     #
+# Data atualização:  30/11/2017                                                     #
 #####################################################################################
 * Leia tudo antes de começar a instalar só depois inicie a instalação. 
 * Se você possuir algum erro, revise todo tutorial novamente e verifique se não 
@@ -75,16 +75,16 @@ apt-get install php7.0 php7.0-gd php7.0-dev php7.0-mcrypt php7.0-curl
 
 wget -qO- http://www.bacula.com.br/atual | tar -xzvf - -C /usr/src
 
-cd /usr/src/bacula-9.0.3/
+cd /usr/src/bacula-9.0.6/
 
 +-----------------------------------------------------------------------------------+
 | >>> Baixando e Compilando o Fonte <<<  * Segundo método                           |
 +-----------------------------------------------------------------------------------+
 cd /usr/src
 *Utilizando wget 
-wget —no-check-certificate https://sourceforge.net/projects/bacula/files/bacula/9.0.3/bacula-9.0.3.tar.gz
-tar xvzf bacula-9.0.3.tar.gz
-cd bacula-9.0.3
+wget —no-check-certificate https://sourceforge.net/projects/bacula/files/bacula/9.0.6/bacula-9.0.6.tar.gz
+tar xvzf bacula-9.0.6.tar.gz
+cd bacula-9.0.6
 
 *Utilizando git (sempre pega a versão mais recente, porém as vezes pode conter alguns bugs)
 git clone -b Branch-9.0 http://git.bacula.org/bacula.git bacula
@@ -118,11 +118,11 @@ cd /usr/src/bacula/bacula
  --disable-nls \
  --with-logdir=/var/log/bacula \
  --with-dump-email=email@dominio.com.br \
- --with-job-email=email@dominio.com.br \
- --without-openssl
-
+ --with-job-email=email@dominio.com.br
  
 * Bacula não é compativel com OpenSSL a partir da 1.1.X =  "--without-openssl"
+
+* Bacula já é compativel com OpenSSL!
 
 * Comando de pré-compilação para PostgreSQL
 ./configure \
@@ -146,8 +146,7 @@ cd /usr/src/bacula/bacula
  --disable-nls \
  --with-logdir=/var/log/bacula \
  --with-dump-email=email@dominio.com.br \
- --with-job-email=email@dominio.com.br \
- --without-openssl
+ --with-job-email=email@dominio.com.br
 
 *Comando para efetuar a compilação e instalação
 make -j 8
