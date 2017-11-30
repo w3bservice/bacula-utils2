@@ -1,0 +1,12 @@
+Wanderlei Hüttel:
+Passos rápidos:
+1-Backup da pasta /etc/bacula
+2-Backup do banco de dados do bacula
+3-Parar o bacula (pkill -9 bacula)
+4-baixar o codigofonte e compilar
+5-copiar os arquivos de configuração (*.conf) de backup do /etc/bacula para o /etc/backup
+6-verificar se os caminhos que foram informados na compilação são iguais aos das configuração, senão, precisa editar os arquivos.
+7-rodar o script de atualizar BD
+8-iniciar o bacula
+9-seja feliz
+10- hehhehehehe
