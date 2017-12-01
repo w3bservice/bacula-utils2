@@ -1,0 +1,4 @@
+FileDaemon { Name = Hostname da Máquina, Desativar Plugins }
+Director { Name= Nome do Director, Password= Senha do Cliente }
+
+não há necessidade de configurar o console!
