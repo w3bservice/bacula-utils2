@@ -1,4 +1,15 @@
-FileDaemon { Name = Hostname da Máquina, Desativar Plugins }
+*** Instalado o bacula no Clientes****
+
+Execultar o Instalador de acordo com a versão do Windows.
+Execultar o "Editar" como administrador para editar as configurações do Cliente.
+
+Dentro do arquivo defina como:
+FileDaemon { Name = Hostname do Cliente, Desative os plugins }
 Director { Name= Nome do Director, Password= Senha do Cliente }
 
-não há necessidade de configurar o console!
+Atenção! Não há necessidade de configurar o console!
+
+Reinicie o Cliente!
+
+
+*** Configurando o cliente no Servidor *** 
