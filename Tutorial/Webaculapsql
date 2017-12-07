@@ -1,136 +1,154 @@
-# Testado em Debian >= 8.0 com PostgreSQL 9.4
-#
-# Referências:
-# - https://github.com/wanderleihuttel/webacula/blob/master/how_to_install_in_mysql-ptbr.txt
-# - FARIA, Heitor. Bacula: A Ferramenta Livre de Backup. 3.ed. Publicação Independente, 2017.
-#
-# Adaptação da primeira referência
-#
+#####################################################################################
+>>>>>  Passos para instalação do Webacula no Debian (testado em Debian >= 8.0 ) <<<<<
+#####################################################################################
+* Leia tudo antes de começar a instalar só depois inicie a instalação. 
+* Se você possuir algum erro, revise todo tutorial novamente e verifique se não 
+esqueceu nenhum passo.
+* Este tutorial foi testado em Debian 9.1 em 28/09/2017
+O webacula com o PHP-7.0 tem alguns warnings que precisam ser corrigidos, a principio
+nada grave.
+* Nesta versão 7.5.3, foi removido o arquivo db.conf do diretório install, que era 
+utilizado para configurar as senhas do banco de dados para criação das tabelas. Agora
+a criação das tabelas do webacula é igual a criação das tabelas do próprio bacula, onde
+executa-se o script passando o usuário e senha após o nome do arquivo.
+* o usuário padrão é 'root' e a senha é 'bacula'
 
-# Considerando que você já possuí o Bacula instalado
-# Atualiza lista de pacotes
+Considerando que você já possuí o Bacula instalado
+
++-----------------------------------------------------------------------------------+
+| >>> Atualizar a lista dos pacotes <<<                                             |
++-----------------------------------------------------------------------------------+
 apt-get update
 
-# Resolvendo dependências
-apt-get install php7.0 php7.0-gd php7.0-dev php7.0-mcrypt php7.0-curl
 
->>> Configurar o PHP <<<
++-----------------------------------------------------------------------------------+
+| >>> Instalar dependências PHP <<<                                                 |
++-----------------------------------------------------------------------------------+
+apt-get install apache2 libapache2-mod-php php php-gd php-dev php-mcrypt php-curl
+
+
++-----------------------------------------------------------------------------------+
+| >>> Instalar dependências do MySQL/MariaDB <<<                                    |
++-----------------------------------------------------------------------------------+
+apt-get install php-mysqlnd
+
+
++-----------------------------------------------------------------------------------+
+| >>> Instalar dependências do PostgreSQL <<<                                       |
++-----------------------------------------------------------------------------------+
+apt-get install php-pgsql
+
+
++-----------------------------------------------------------------------------------+
+| >>> Configurar o PHP <<<                                                          |
++-----------------------------------------------------------------------------------+
 Editar o arquivo /etc/php/7.0/apache2/php.ini  and alterar a opção 'date.timezone' e 'max_execution_time'
-nano /etc/php/7.0/apache2/php.ini
+vim /etc/php5/apache2/php.ini
 date.timezone = America/Sao_Paulo
 max_execution_time = 3600
 
-# Vá para o diretório web do Apache
-cd /var/www
++-----------------------------------------------------------------------------------+
+| >>> Efetuar o download da última versão do Webacula <<<                           |
++-----------------------------------------------------------------------------------+
+Verificar qual é a última versão do Webacula em: https://github.com/wanderleihuttel/webacula/releases
+* A última versão na instalação do tutorial é a 7.5.3
+cd /usr/src/
+wget --no-check-certificate -c https://github.com/wanderleihuttel/webacula/archive/7.5.3.tar.gz
+tar xvzf 7.5.3.tar.gz
+mv webacula-7.5.3 webacula
 
-# Efetua um clone do respositório Webacula modificado por Wanderlei Huttel
-git clone https://github.com/wanderleihuttel/webacula webacula
 
-# Abre o arquivo /var/www/webacula/install/db.conf
-nano /var/www/webacula/install/db.conf
++-----------------------------------------------------------------------------------+
+| >>> Criar as tabelas do Webacula no MySQL/MariaDB <<<                             |
++-----------------------------------------------------------------------------------+
+cd /usr/src/webacula/install/MySql
 
-# Preencha os campos abaixo com as credenciais do usuário do bacula do PostgreSQL e de acordo com os dados do banco
-db_name='bacula'
-db_user='bacula'
-db_pwd='senha' # <==(Altere para a senha de usuário do administrador da base de dados) = Padrão "bacula"
+* Caso não tenha definido uma senha
+./10_make_tables.sh
+./20_acl_make_tables.sh
+/etc/bacula/scripts/grant_mysql_privileges
 
-# Navega até o diretório para a execução do script do banco
-cd /var/www/webacula/install/PostgreSql/
+* Caso não tenha definido uma senha
+./10_make_tables.sh -p
+./20_acl_make_tables.sh -p
+/etc/bacula/scripts/grant_mysql_privileges -p
 
-# Pegue permissão do postgres
+
++-----------------------------------------------------------------------------------+
+| >>> Criar as tabelas do Webacula no PostgreSQL <<<                                |
++-----------------------------------------------------------------------------------+
+cd /usr/src/webacula/install/PostgreSql
+chown postgres 10_make_tables.sh && chown postgres 20_acl_make_tables.sh && \
+chown postgres 30_grant_postgresql_privileges.sh && chown postgres 40_delete_postgresql_tables.sh
 su postgres
-
-# Executa o script de banco de dados
-./10_make_tables.sh -Upostgres
-./20_acl_make_tables.sh -Upostgres
-./30_grant_postgresql_privileges.sh -Upostgres
-
-# Acessa o diretório para a criação do hash para uma nova senha de usuário administrador do Webacula (root)
-cd /var/www/webacula/install/
-
-# Cria a senha do usuário root do Webacula
-php password-to-hash.php PASSWORD  # <==(Em PASSWORD, altere para a senha de usuário do Webacula) = Padrão bacula
-
-# A saída é algo como a string: '$P$BN7e27dudrIi7LHaYs91bRAIZULVR60' # <== (Anote o hash MD5 gerado)
-
-# Ascenda ao console do postgresql
-psql
-
-# Conecte-se ao banco de dados 'bacula'
-\connect bacula
-
-# Atualize a senha do usuário root do Webacula
-update webacula_users SET pwd = ‘$P$BN7e27dudrIi7LHaYs91bRAIZULVR60’ where id = ‘1000’; # <== (O hash MD5 deve ser o que foi anotado)
-# Para sair
-\q
+./10_make_tables.sh
+./20_acl_make_tables.sh
+./30_grant_postgresql_privileges.sh
 exit
 
-# Reinicie o Bacula diretor
-/etc/init.d/bacula-dir restart
 
-# Copie o arquivo de configuração padrão do Webacula para o diretório do apache
-cp /var/www/webacula/install/apache/webacula.conf /etc/apache2/sites-enabled/
++-----------------------------------------------------------------------------------+
+| >>> Editar o arquivo /usr/src/webacula/application/config.ini <<<                 |
++-----------------------------------------------------------------------------------+
+Preencher os campos com do usuário bacula do MySQL/MariaDB ou do PostgreSQL
+MySQL/MariaDB = PDO_MYSQL
+PostgreSQL    = PDO_PGSQL
 
-# Abra o arquivo copiado para edição
-nano /etc/apache2/sites-enabled/webacula.conf
-# Descomente: Allow from all
-# E salve
+vim /usr/src/webacula/application/config.ini
 
-#Ative o módulo rewrite do Apache e reinicie o serviço apache.
-echo rewrite | a2enmod && service apache2 restart
-
-# Abra o arquivo de configuração do Webacula para edição
-nano /var/www/webacula/application/config.ini
-
-# Altere o tipo de banco de dados e a senha para o administrador do Bacula
 db.adapter         = PDO_PGSQL
 db.config.host     = localhost
 db.config.username = bacula
-db.config.password = 'senha' # <==(Altere para a senha de usuário do administrador da base de dados) = Padrão "bacula"
-
-# A senha acima, caso tenha caracter especial deve ser colocada entre aspas simples
+db.config.password = bacula
 db.config.dbname   = bacula
 def.timezone = "America/Sao_Paulo"
-bacula.sudo        = "/usr/bin/sudo"
-bacula.bconsole    = "/usr/sbin/bconsole"
+# Caminho dos binários do bacula e sudo. Caso esteja com problemas, deixe em branco a configuração do sudo
+bacula.sudo        = "/usr/bin/sudo"  
+bacula.bconsole    = "/sbin/bconsole"
 bacula.bconsolecmd = "-n -c /etc/bacula/bconsole.conf"
-# Salve e saia
 
-# Conceda permissão correta aos diretórios
-chown -R www-data.www-data /var/www/webacula
-chown www-data /usr/sbin/bconsole
-chmod u=rwx,g=rx,o=r /usr/sbin/bconsole
-chown www-data /etc/bacula/bconsole.conf
-chmod u=rw,g=r,o=r /etc/bacula/bconsole.conf
-chown www-data /etc/bacula
-chmod 777 /var/www/webacula/data/cache
+
++-----------------------------------------------------------------------------------+
+| >>> Conceder permissão correta aos diretórios e arquivos <<<                      |
++-----------------------------------------------------------------------------------+
+cd /usr/src
+chown -R www-data.www-data /usr/src/webacula
 chmod 775 /etc/bacula
+chmod 777 /usr/src/webacula/data/cache
 
-# Conceda permissão para o usuário www-data executar o bconsole
-# Abra para edição o /etc/sudoers
-nano /etc/sudoers
 
-# E adicione
-Defaults:www-data     !requiretty
-www-data ALL=NOPASSWD:/usr/sbin/bconsole
-# Salve e saia
++-----------------------------------------------------------------------------------+
+| >>> Configurar o Apache <<<                                                       |
++-----------------------------------------------------------------------------------+
+Copiar o arquivo /usr/src/webacula/install/apache/webacula.conf para  /etc/apache2/sites-available/
+cp /usr/src/webacula/install/apache/webacula.conf   /etc/apache2/sites-available/webacula.conf
 
-# Criar o grupo bacula
-groupadd bacula
+Editar o arquivo /etc/apache2/sites-available/webacula.conf e verificar se está liberado 
+para a sua faixa de rede. Por padrão é "Allow from 192.168.1."
 
-# Verifica se existe
-cat /etc/group | grep bacula
+* Habilitar o modo rewrite do Apache
+a2enmod rewrite
 
-#Adiciona o usuário 'www-data' para o grupo 'bacula'
-usermod -aG bacula www-data
+* Habilitar o Webacula no Apache
+cd /etc/apache2/sites-available/
+a2ensite webacula.conf
 
-# Reinicie o Bacula Diretor e Apache
-/etc/init.d/apache2 restart
-/etc/init.d/bacula-dir restart
 
-# Usuário e Senha
-root e senha bacula
++-----------------------------------------------------------------------------------+
+| >>> Conceder permissão para o usuário www-data executar o bconsole <<<            |
++-----------------------------------------------------------------------------------+
+echo "www-data ALL=NOPASSWD:/usr/sbin/bconsole" > /etc/sudoers.d/webacula
+service apache2 restart
 
-# caso apareça erros no Webacula
-/var/www/webacula/application/config.ini
-remover oque conter dentro das aspas na linha sudo.
++-----------------------------------------------------------------------------------+
+| >>> Mover o diretório /usr/src/webacula para o diretório root do Apache <<<       |
++-----------------------------------------------------------------------------------+
+mv /usr/src/webacula  /var/www
+
+
++-----------------------------------------------------------------------------------+
+| >>> Acessar o Webacula <<<                                                        |
++-----------------------------------------------------------------------------------+
+Acessar o webacula pelo endereço ip: http://192.168.1.x/webacula
+Usuário padrão: root
+Senha padrão:   bacula
