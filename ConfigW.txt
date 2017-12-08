@@ -14,7 +14,8 @@ Senha do Cliente: Hw6nx3t+wF+b8yM1iyxLvnsdsEqUB2XO/DnsGsd8kaWT
 Senha do Monitor: FUtuXs2cPA863DRytWCINAuRR3qaImfbdQLjpRi/nvZI
 Nome do Cliente : sacest01-fd
 
-DIR Name: Eolo-dir
+DIR Name: Eolo-dir 
+* Atenção é de estrema importância coloca exatamente igual o nome do director inclusive letras maiúsculas!
 
 Next > Next > Desmarque a caixa "Show Readme" > Finish
 
