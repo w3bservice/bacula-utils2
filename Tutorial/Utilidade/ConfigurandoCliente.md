@@ -1,37 +1,49 @@
-*** Instalado o bacula no Clientes****
+## Configurando Clientes no Bacula.
+1. Execute o Instalador do Bacula conforme a versão do Windows: **"32 bits ou 64 bits"**
 
-Execultar o Instalador de acordo com a versão do Windows.
+2. Clique em  **"Next > I agree > Custom > Next"**
 
-Clicar em Next > I agree > Custom > Next
+3. Desmarque a caixa **"Consoles, Plugins e Documentation"**
 
-Desmarque a caixa de plugins, Documentation e Consoles.
-Clicar em Next > Next > Next
+4. Clique em  **"Next > Next"**
+* Para manter o diretorio de instalação original.
 
-* Manter diretorio de Instalação Original, Porta, e Nome.
-* o Bacula, Pega Automaticamente o hostname da máquina.
+5. Altere a senha para a padrão de configuração do Bacula.
+* O Bacula, pega automaticamente o hostname da máquina.
+* Mantenha a porta, nome, max jobs e ambas caixas marcadas.
+* Anote exatamente como está escrito o **"name"**.
 
-Senha do Cliente: Hw6nx3t+wF+b8yM1iyxLvnsdsEqUB2XO/DnsGsd8kaWT
-Senha do Monitor: FUtuXs2cPA863DRytWCINAuRR3qaImfbdQLjpRi/nvZI
-Nome do Cliente : sacest01-fd
+6. Clique em  **"Next"**
 
-DIR Name: Eolo-dir 
-* Atenção é de estrema importância coloca exatamente igual o nome do director inclusive letras maiúsculas!
+7. Digite exatamente como está anotado no caderno o nome do **"DIR Name"**.
 
-Next > Next > Desmarque a caixa "Show Readme" > Finish
+8. Clique em **"Install > Next"** 
 
-Reinicia a máquina!
+9. Desmarque a caixa **"Show Readme"**
 
-*****************************************************************
+10. Clique em **"Finish"**
 
-Execultar o "Editar" como administrador para editar as configurações do Cliente.
+11. **Reinicia a máquina!**
 
-Dentro do arquivo defina como:
-FileDaemon { Name = Hostname do Cliente, Desative os plugins }
-Director { Name= Nome do Director, Password= Senha do Cliente }
+## Configurando o Cliente no Servidor.
 
-Atenção! Não há necessidade de configurar o console!
+11. Abra o **"putty"**
 
-Reinicie o Cliente!
+12. Digite o IP do Servidor em Host Name.
 
+13. Clique em **"Open"**.
 
-*** Configurando o cliente no Servidor *** 
+14. Digite o nome do usuário, senha e faça login.
+
+15. Digite **su**
+
+16. Digite **cd /etc/bacula**
+
+17. Digite **cp -r Exemplo /elstc/bacula/clients-and-jobs/Nome_do_Cliente_Aqui**
+
+18. Digite **cd clients-and-jobs/Nome_do_Cliente_Aqui**
+
+19. Digite **nano fd.conf**
+* Altere o **"name"** e **"Hostname"** para o nome do cliente, anotado no passo 5.
+
+17. Digite **
