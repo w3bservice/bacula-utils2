@@ -39,11 +39,34 @@
 
 16. Digite **cd /etc/bacula**
 
-17. Digite **cp -r Exemplo /elstc/bacula/clients-and-jobs/Nome_do_Cliente_Aqui**
+17. Digite **cp -r Exemplo /etc/bacula/clients-and-jobs/Nome_do_Cliente_Aqui**
 
 18. Digite **cd clients-and-jobs/Nome_do_Cliente_Aqui**
 
 19. Digite **nano fd.conf**
 * Altere o **"name"** e **"Hostname"** para o nome do cliente, anotado no passo 5.
 
-17. Digite **
+20. Pressione **CTRL + O** e tecle **enter** para salvar o arquivo.
+
+21. Pressione **CTRL + X** para sair da tela de edição do arquivo.
+
+22. Digite **nano filesets.conf**
+* Altere o **"Hostname"** para o nome do cliente, anotado no passo 5.
+* Cada linha de "File" corresponde a um diretorio para adicionar mais acrescente linhas, e para remover remova!
+
+
+23. Pressione **CTRL + O** e tecle **enter** para salvar o arquivo.
+
+24. Pressione **CTRL + X** para sair da tela de edição do arquivo.
+
+25. Digite **nano jobs.conf**
+* Altere o **"Hostname"** para o nome do cliente, anotado no passo 5.
+
+26. Pressione **CTRL + O** e tecle **enter** para salvar o arquivo.
+
+27. Pressione **CTRL + X** para sair da tela de edição do arquivo.
+
+28. Digite **nano /etc/bacula/clients-and-jobs.conf**
+* Acrescente uma linha no final do arquivo como exemplo abaixo:
+**@/etc/bacula/clients-and-jobs/sacest3/fd.conf          # Máquina do Estágiario**
+
