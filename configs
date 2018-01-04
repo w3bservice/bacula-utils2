@@ -1,0 +1,42 @@
+#        Arquivos de Programas
+        wildfile = "*.exe"
+        wildfile = "*.msi"
+        wildfile = "*.bin"
+        wildfile = "*.app"
+        wildfile = "*.dmg"
+        wildfile = "*.ini"
+        wildfile = "*.sys"
+        wildfile = "*.dwg"	
+        wildfile = "*.bak"
+        wildfile = "*.iso"		
+
+#        Audio		
+        wildfile = "*.mp3"
+        wildfile = "*.wav"
+        wildfile = "*.aac"
+        wildfile = "*.wma"
+        wildfile = "*.m4a"
+        wildfile = "*.ogg"
+
+#        Video		
+        wildfile = "*.avi"
+        wildfile = "*.mp4"
+        wildfile = "*.mov"
+        wildfile = "*.flv"
+        wildfile = "*.mpg"
+        wildfile = "*.rmvb"
+        wildfile = "*.mkv"
+		
+#        Arquivos compactados		
+        wildfile = "*.zip"
+        wildfile = "*.rar"
+        wildfile = "*.7z"
+        wildfile = "*.tar"
+        wildfile = "*.gz"
+		
+#        Fotos		
+        wildfile = "*.png"
+        wildfile = "*.jpg"
+        wildfile = "*.gif"
+        wildfile = "*.psd"
+        wildfile = "*.bmp"
